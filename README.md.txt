@@ -1,1 +1,0 @@
-News last for today

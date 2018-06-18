@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,12 +92,16 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder>{
 
         Date date = null;
         try {
-            date = ISO8601Parse.parse(articleList.get(position).getPublishedAt());
+            if (articleList.get(position).getPublishedAt() == null) {
+                Log.d("devnv","No time publishing");
+            } else {
+                date = ISO8601Parse.parse(articleList.get(position).getPublishedAt());
+            }
         } catch (ParseException ex){
             ex.printStackTrace();
         }
         try {
-            holder.article_time.setReferenceTime(date.getTime());
+                holder.article_time.setReferenceTime(date.getTime());
         } catch (NullPointerException ex){
 
         }
@@ -105,21 +110,19 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder>{
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-
-
                 switch (view.getId()){
         case R.id.share_btn:
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             String link = articleList.get(position).getUrl();
-            String subj = articleList.get(position).getTitle().substring(0,30) + "...";
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, subj);
             shareIntent.putExtra(Intent.EXTRA_TEXT,link);
-            context.startActivity(Intent.createChooser(shareIntent, "Share the news: " + subj));
+            context.startActivity(Intent.createChooser(shareIntent, "Share the news"));
             break;
         default:
+            String linkUrl = articleList.get(position).getUrl();
             Intent detail = new Intent(context,DetailArticle.class);
             detail.putExtra("webURL", articleList.get(position).getUrl());
+            detail.putExtra("link", linkUrl);
             context.startActivity(detail);
             break;
     }
@@ -130,4 +133,6 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder>{
     public int getItemCount() {
         return articleList.size();
     }
+
+
 }

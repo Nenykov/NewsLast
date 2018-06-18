@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,23 +24,21 @@ import trainee_nenykovapp.prospektdev.com.newsapp.Interface.IconBetterIdeaServic
 import trainee_nenykovapp.prospektdev.com.newsapp.Interface.ItemClickListener;
 import trainee_nenykovapp.prospektdev.com.newsapp.ListNews;
 import trainee_nenykovapp.prospektdev.com.newsapp.Model.IconBetterIdea;
+import trainee_nenykovapp.prospektdev.com.newsapp.Model.Source;
 import trainee_nenykovapp.prospektdev.com.newsapp.Model.WebSite;
 import trainee_nenykovapp.prospektdev.com.newsapp.R;
 
-class ListSourceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+class ListSourceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
     ItemClickListener itemClickListener;
-
     TextView source_title;
     CircleImageView source_image;
 
     public ListSourceViewHolder(View itemView) {
         super(itemView);
-
         source_image = itemView.findViewById(R.id.source_image);
         source_title = itemView.findViewById(R.id.source_name);
-
         itemView.setOnClickListener(this);
     }
 
@@ -51,13 +52,19 @@ class ListSourceViewHolder extends RecyclerView.ViewHolder implements View.OnCli
     }
 }
 
-public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder>{
+
+
+
+
+
+
+
+
+public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder> {
 
     private Context context;
     private WebSite webSite;
-
     private IconBetterIdeaService mservice;
-
 
     public ListSourceAdapter(Context context, WebSite webSite) {
         this.context = context;
@@ -89,21 +96,16 @@ public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder
                                 Picasso.with(context)
                                         .load(response.body().getIcons().get(0).getUrl())
                                         .into(holder.source_image);
-
                             }
-                        } catch (NullPointerException ex){
-
+                        } catch (NullPointerException ex) {
                         }
                     }
 
                     @Override
                     public void onFailure(Call<IconBetterIdea> call, Throwable t) {
-
                     }
                 });
-
         holder.source_title.setText(webSite.getSources().get(position).getName());
-
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
@@ -120,4 +122,6 @@ public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder
     public int getItemCount() {
         return webSite.getSources().size();
     }
+
+
 }
